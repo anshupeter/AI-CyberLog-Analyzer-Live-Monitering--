@@ -1,0 +1,28 @@
+{
+  "name": "cyber-log-analyzer",
+  "version": "1.0.0",
+  "description": "AI-Powered Log Analyzer & SIEM-style Cybersecurity Dashboard",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && node index.js",
+    "client": "cd client && npm run dev",
+    "attack:demo": "node scripts/attack-simulator.js",
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+    "postinstall": "cd server && npm install && cd ../client && npm install",
+    "build": "cd client && npm run build"
+  },
+  "keywords": [
+    "siem",
+    "cybersecurity",
+    "log-analyzer",
+    "threat-detection",
+    "mitre-attack"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "concurrently": "^8.2.2",
+    "dotenv": "^17.4.2",
+    "resend": "^6.12.4",
+    "uuid": "^11.0.5"
+  }
+}

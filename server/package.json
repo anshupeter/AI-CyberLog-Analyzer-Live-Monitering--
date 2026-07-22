@@ -1,0 +1,22 @@
+{
+    "name": "cyber-log-analyzer-server",
+    "version": "1.0.0",
+    "description": "Backend server for Cyber Log Analyzer",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "node index.js"
+    },
+    "dependencies": {
+        "better-sqlite3": "^11.7.0",
+        "chokidar": "^5.0.0",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.7",
+        "express": "^4.21.2",
+        "express-rate-limit": "^7.5.0",
+        "helmet": "^8.0.0",
+        "multer": "^1.4.5-lts.1",
+        "uuid": "^11.0.5",
+        "ws": "^8.18.0"
+    }
+}

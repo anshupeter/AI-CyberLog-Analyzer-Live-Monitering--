@@ -1,0 +1,40 @@
+[
+  {
+    "timestamp": "2026-02-24T10:05:11Z",
+    "level": "INFO",
+    "event": "login_success",
+    "user": "admin",
+    "ip": "192.168.1.10",
+    "status": 200
+  },
+  {
+    "timestamp": "2026-02-24T10:06:02Z",
+    "level": "WARNING",
+    "event": "failed_login",
+    "user": "admin",
+    "ip": "185.243.44.12",
+    "status": 401
+  },
+  {
+    "timestamp": "2026-02-24T10:06:05Z",
+    "level": "WARNING",
+    "event": "failed_login",
+    "user": "admin",
+    "ip": "185.243.44.12",
+    "status": 401
+  },
+  {
+    "timestamp": "2026-02-24T10:06:08Z",
+    "level": "CRITICAL",
+    "event": "brute_force_detected",
+    "ip": "185.243.44.12",
+    "attempts": 7
+  },
+  {
+    "timestamp": "2026-02-24T10:07:30Z",
+    "level": "ALERT",
+    "event": "suspicious_ip_access",
+    "ip": "203.0.113.77",
+    "endpoint": "/admin"
+  }
+]

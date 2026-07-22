@@ -1,0 +1,14 @@
+node_modules/
+database/logs.db
+database/live-demo.log
+server/uploads/
+.env
+dist/
+.DS_Store
+*.log
+!database/sample.log
+.env
+node_out.txt
+*.db
+*.db-shm
+*.db-wal

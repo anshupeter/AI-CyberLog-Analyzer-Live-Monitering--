@@ -1,0 +1,8 @@
+timestamp,ip,user,event,status,endpoint
+2026-02-24 10:10:01,192.168.1.10,admin,login_success,200,/login
+2026-02-24 10:10:05,185.243.44.12,admin,failed_login,401,/login
+2026-02-24 10:10:06,185.243.44.12,admin,failed_login,401,/login
+2026-02-24 10:10:07,185.243.44.12,admin,failed_login,401,/login
+2026-02-24 10:10:10,203.0.113.77,unknown,unauthorized_access,403,/admin
+2026-02-24 10:10:22,45.33.21.9,api_user,high_request_rate,429,/api/data
+2026-02-24 10:10:45,172.16.0.2,system,server_error,500,/api/login

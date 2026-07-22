@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CyberGuard Demo Site</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">CyberGuard Demo Website</p>
+          <h1>Generate Safe Traffic or Simulated Attacks</h1>
+          <p class="lede">
+            This tiny site writes log entries into the shared demo log file so the live monitor can detect activity in real time.
+          </p>
+        </div>
+        <div class="status-card">
+          <span class="dot"></span>
+          <div>
+            <strong id="monitorState">Checking live monitor...</strong>
+            <p id="monitorPath">Loading monitoring target</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid">
+        <button data-scenario="benign" class="card">
+          <h2>Normal Browsing</h2>
+          <p>Writes a few clean requests to the shared log file.</p>
+        </button>
+        <button data-scenario="bruteforce" class="card danger">
+          <h2>Login Attack</h2>
+          <p>Generates repeated failed logins from one IP address.</p>
+        </button>
+        <button data-scenario="scan" class="card warning">
+          <h2>Recon Scan</h2>
+          <p>Touches many sensitive paths and suspicious payloads.</p>
+        </button>
+        <button data-scenario="ddos" class="card hot">
+          <h2>Traffic Burst</h2>
+          <p>Creates a burst of requests that looks like a flood.</p>
+        </button>
+      </section>
+
+      <section class="footer-panel">
+        <div>
+          <h3>How it works</h3>
+          <p>
+            Click a button to append logs. The backend live monitor watches the file, parses new lines, runs the existing detection engine, and broadcasts detections to the dashboard.
+          </p>
+        </div>
+        <pre id="output">Ready.</pre>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

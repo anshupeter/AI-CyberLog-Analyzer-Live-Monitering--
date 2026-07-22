@@ -8,31 +8,44 @@
   <img src="https://img.shields.io/badge/UI-Cyber%20SOC%20Dashboard-purple?style=for-the-badge" />
 </p>
 
-------------------------------------------------------------------------
+---
 
 ## 🛡️ Project Overview
 
-**AI CyberLog Analyzer (CyberGuard)** is a futuristic SOC (Security
-Operations Center) style cybersecurity dashboard that analyzes log
-files, detects suspicious activities, and visualizes threats in
-real-time using an eye-catching cyber-themed interface.
+**AI CyberLog Analyzer (CyberGuard)** is a futuristic SOC (Security Operations Center) style cybersecurity dashboard that analyzes log files, detects suspicious activities, and visualizes threats in real-time using an eye-catching, glassmorphism cyber-themed interface.
 
-It is designed for: - 🔵 Blue Team Learning - 🛰️ SOC Dashboard
-Simulation - 📊 Log Intelligence & Threat Detection - 🔐 Cybersecurity
-Portfolio Projects
+It supports multi-format log parsing, rule-based threat detection mapped to the MITRE ATT&CK framework, and **real-time live monitoring** powered by WebSockets.
 
-The system supports multi-format log parsing, AI-driven insights, MITRE
-ATT&CK mapping, and real-time cyber threat visualization.
+---
 
-------------------------------------------------------------------------
+## ✨ Features
 
-# 🔷 System Architecture Diagram
+### 📡 Real-Time Live Monitoring & Streaming
+- **WebSocket-Based SOC Feed**: Live stream Apache-style access logs directly into a terminal-style UI at `/stream`.
+- **Live Threat Detection**: A real-time watcher detects threat patterns as they are generated and pushes them directly to the frontend's **Live Detections** panel.
+- **Active Attack Simulator**: Includes a CLI tool (`npm run attack:demo`) to run simulated attacks (Brute Force, DDoS, SQL Injection, Port Scanning, etc.) and observe live detections.
+
+### 📤 Core Log Analysis
+- **Smart Log Upload**: Drag & drop support for `.log`, `.txt`, `.json`, and `.csv` files.
+- **AI Anomaly Detection**: Hybrid heuristics-based detection engine paired with natural-language AI threat summaries and risk scoring.
+- **MITRE ATT&CK Mapping**: Automatically maps detected threats to the official MITRE ATT&CK techniques with visual threat badges.
+- **SOC Analytics Dashboard**: Interactive charts (Recharts) visualizing unique IPs, logs processed, threat severity breakdown, and recent threat event tables.
+
+### 🎨 Premium Cyber-Dark UI/UX
+- Futuristic dark theme (`#0A0F1F`) with neon glow accents.
+- Smooth animations powered by **Framer Motion**.
+- Fully responsive layout for desktop and tablet screens.
+
+---
+
+## 🔷 System Architecture
+
 ```mermaid
 flowchart TD
-    A[User Uploads Log File] --> B[Frontend Dashboard Interface]
+    A[User Uploads Log File / Trigger Attack Sim] --> B[Frontend Dashboard Interface / CLI]
     
-    B --> C[File Validation and Preprocessing]
-    C --> D[Backend Analysis API]
+    B --> C[File Validation & Log Stream Append]
+    C --> D[Backend Server API / Live Watcher]
     
     D --> E[Log Processing Engine]
     
@@ -50,226 +63,125 @@ flowchart TD
     
     K --> L[Analysis Report Generator]
     
-    L --> M[Database Storage]
+    L --> M[SQLite Database Storage]
     M --> N[Log Records and Analysis History]
     
-    L --> O[JSON Response to Frontend]
+    L --> O[WebSocket Broadcast & REST Response]
     
-    O --> P[Visualization Dashboard]
+    O --> P[Visualization SOC Dashboard]
     P --> Q[Threat Insights Panels]
-    P --> R[Charts and Log Statistics]
-    P --> S[Alert and Anomaly Reports]
-```
-------------------------------------------------------------------------
-
-# ⚙️ Detailed System Workflow
-
-## 1️⃣ Log Input Layer
-
-Users can upload logs in multiple formats: - `.log` - `.txt` - `.json` -
-`.csv` - Apache/Nginx access logs
-
-OR use live stream simulation for real-time SOC experience.
-
-------------------------------------------------------------------------
-
-## 2️⃣ Frontend --- CyberGuard Dashboard
-
-Built using: - React + Vite - Tailwind CSS (Cyber Theme) - Recharts
-(Data Visualization) - Framer Motion (Animations)
-
-Main Modules: - Dashboard (Threat Analytics) - Upload Logs Panel - Live
-Stream Viewer - AI Analysis Section - MITRE ATT&CK Mapping Panel -
-Recent Analysis Sessions
-
-------------------------------------------------------------------------
-
-## 3️⃣ Backend Processing (Node.js + Express)
-
-The backend handles: - Secure file uploads - REST API communication -
-Log analysis orchestration - Real-time data processing - Threat
-detection routing
-
-------------------------------------------------------------------------
-
-## 4️⃣ Log Parsing Engine (Core Intelligence)
-
-The parser extracts key attributes: - Timestamp - IP Address - Event
-Type - Status Codes - Users & Endpoints
-
-Detection Methods: - Regex pattern matching - Frequency analysis -
-Behavioral correlation - Event classification
-
-------------------------------------------------------------------------
-
-## 5️⃣ Threat Detection Engine (Blue-Team Logic)
-
-Detects: - 🔴 Brute Force Attacks (Multiple failed logins) - 🟠
-Credential Stuffing - 🟡 Unauthorized Access (401/403) - 🟣 DDoS
-Patterns (Request spikes) - 🔵 IP Anomalies - ⚠️ Privilege Escalation
-Attempts
-
-Example Rule: IF failed_logins_from_same_IP \> 5 within 60 seconds\
-→ Flag as Brute Force Attack (HIGH Severity)
-
-------------------------------------------------------------------------
-
-## 6️⃣ AI Analysis Module
-
-Provides intelligent insights: - Automated threat summaries - Risk
-scoring - Behavior explanation - Human-readable cyber analysis
-
-Example Output: "Possible brute force attack detected from IP
-185.243.44.12 with multiple failed login attempts within a short time
-window."
-
-------------------------------------------------------------------------
-
-## 7️⃣ Database Layer (SQLite)
-
-Why SQLite: - No external DB setup - Lightweight & portable -
-Auto-created on first run - Perfect for GitHub cloning - No MongoDB / No
-Supabase
-
-Stored Data: - Uploaded Logs - Threat Results - Analysis Sessions - IP
-Activity Metrics
-
-------------------------------------------------------------------------
-
-## 8️⃣ Visualization & SOC Dashboard Output
-
-Displayed Analytics: - Threat Severity Pie Chart - Top IP Activity
-Graph - Threat Breakdown Chart - Unique IP Counter - Logs Processed
-Counter - Recent Threat Table
-
-------------------------------------------------------------------------
-
-# 🔍 MITRE ATT&CK Mapping
-
-| Attack Type           | MITRE ID | Description                     |
-|-----------------------|----------|---------------------------------|
-| Brute Force           | T1110    | Credential Guessing             |
-| Unauthorized Access   | T1078    | Valid Accounts Abuse            |
-| DDoS Pattern          | T1498    | Network Denial of Service       |
-| Privilege Escalation  | T1068    | Exploitation for Privilege      |
-
-------------------------------------------------------------------------
-
-# 🚀 Installation (Clone & Run)
-
-``` bash
-cd AI-CyberLog-Analyzer
-npm install
-npm run dev
+    P --> R[Charts & Live Terminal Stream]
+    P --> S[MITRE ATT&CK Map]
 ```
 
-⚡ SQLite database auto-generates on first run (Zero configuration
-required)
+---
 
-------------------------------------------------------------------------
+## ⚙️ Threat Detection Engine & MITRE Mapping
 
-## ✨ Features
+The detection engine classifies threat activity under corresponding **MITRE ATT&CK** techniques:
 
-### Core Functionality
-- **📤 Smart Log Upload** — Drag & drop `.log`, `.txt`, `.json`, `.csv` files with preview
-- **📡 Real-Time Streaming** — WebSocket-based SIEM-style live log feed with terminal UI
-- **🧠 AI Anomaly Detection** — Rule + heuristic hybrid engine with natural-language summaries
-- **🛡️ MITRE ATT&CK Mapping** — Auto-map threats to framework techniques with visual badges
-- **📊 Interactive Analytics** — Recharts-powered dashboards with pie, bar, and line charts
+| Threat Type | Rule Criteria | MITRE ID | Description |
+| :--- | :--- | :--- | :--- |
+| **Brute Force Attack** | >5 failed login attempts from a single IP in 60s | `T1110` | Credential guessing attempt |
+| **DDoS Pattern** | >100 HTTP requests in 60s from a single IP | `T1498` | Network denial-of-service attempt |
+| **Exploit Attempt** | Detection of SQLi, XSS, or path traversal payloads | `T1190` | Exploitation of public-facing application |
+| **Reconnaissance** | Port probing or directory/service scanning | `T1046` | Active network scanning |
+| **Unauthorized Access** | Clusters of 401/403 unauthorized client errors | `T1078` | Attempted valid accounts abuse |
+| **Suspicious Tool** | User-agent headers matching Nikto, sqlmap, or Nmap | `T1595` | Active scanner scanning |
 
-### Detection Engine (Blue-Team Logic)
-| Threat Type | Description | MITRE ID |
-|---|---|---|
-| Brute Force Attack | >5 failed logins from same IP in 60s | T1110 |
-| DDoS Pattern | >100 requests/min from single IP | T1498 |
-| Exploit Attempt | SQL injection, XSS, path traversal | T1190 |
-| Reconnaissance | Directory/service scanning | T1046 |
-| Unauthorized Access | Repeated admin panel probing | T1133 |
-| Suspicious Tool | Known scanner user-agents (Nikto, sqlmap, Nmap) | T1595 |
-| Auth Failures | Clusters of 401/403 responses | T1078 |
+---
 
-### UI/UX
-- 🌑 Futuristic cyber-dark theme (#0A0F1F)
-- ✨ Neon glow accents (cyan, purple, blue)
-- 🔲 Glassmorphism cards with backdrop blur
-- 🎬 Framer Motion animations throughout
-- 📟 Terminal-style live log viewer
-- 📱 Fully responsive design
-
-------------------------------------------------------------------------
-
-# 📂 Project Structure
+## 📂 Project Structure
 
 ```text
 cyber-log-analyzer/
-├── client/                    # React Frontend
+├── client/                    # React Frontend (Vite)
 │   ├── src/
-│   │   ├── components/        # Layout, Sidebar, ThreatBar
+│   │   ├── components/        # Layout, Sidebar, ThreatBar (live alert sidebar)
 │   │   ├── pages/             # Dashboard, Upload, LogStream, Analysis, MitreAttack
-│   │   ├── hooks/             # useWebSocket custom hook
-│   │   ├── utils/             # Axios API client
-│   │   ├── App.jsx            # Router + routes
-│   │   ├── main.jsx           # Entry point
-│   │   └── index.css          # Global styles + cyber theme
-│   ├── tailwind.config.js     # Custom theme config
-│   ├── vite.config.js         # Vite + proxy config
+│   │   ├── hooks/             # WebSocket connections
+│   │   ├── utils/             # API client configurations
+│   │   ├── App.jsx            # Routing and paths
+│   │   ├── index.css          # Theme design tokens & utilities
+│   │   └── main.jsx
+│   ├── vite.config.js         # Proxy rules pointing /api and /ws to port 5000
 │   └── package.json
-├── server/                    # Express Backend
+├── server/                    # Node.js Express Backend
 │   ├── routes/
-│   │   └── logs.js            # API endpoints
-│   ├── db.js                  # SQLite setup + MITRE seeding
-│   ├── index.js               # Server entry point
+│   │   ├── logs.js            # REST API endpoints
+│   │   └── demo.js            # Live simulation controls
+│   ├── services/
+│   │   └── demoTraffic.js     # Simulated logs and attack generator
+│   ├── db.js                  # SQLite schema creation & seed data
+│   ├── liveMonitor.js         # Log file tailing & parser trigger
+│   ├── index.js               # Express app and WebSocket server config
 │   └── package.json
-├── parser/                    # Detection Engine
-│   ├── logParser.js           # Multi-format log parser
-│   ├── detectionEngine.js     # 7 threat detection rules
-│   └── aiAnalyzer.js          # AI analysis + risk scoring
+├── parser/                    # Analysis Core
+│   ├── logParser.js           # Multi-format (JSON, CSV, Raw Log) parsing engine
+│   ├── detectionEngine.js     # Heuristic detection rule list
+│   └── aiAnalyzer.js          # Mock LLM insights & risk score generator
 ├── websocket/
-│   └── streamManager.js       # WebSocket + simulated stream
+│   └── streamManager.js       # WebSocket broadcasting & subscriber manager
 ├── database/
-│   ├── schema.sql             # Reference SQL schema
-│   ├── sample.log             # Test log file
-│   └── logs.db                # Auto-generated SQLite DB
-├── .env.example               # Environment template
-├── .gitignore
-├── package.json               # Root scripts
+│   ├── schema.sql             # SQL references
+│   └── sample.log             # Test logs
+├── scripts/
+│   └── attack-simulator.js    # Interactive attack CLI tool
+├── package.json               # Main orchestration package script
 └── README.md
 ```
 
-------------------------------------------------------------------------
+---
 
-## 🧱 Tech Stack
+## 🚀 Installation & Setup
 
-| Layer | Technology | Purpose |
-|---|---|---|
-| Frontend | React 18 + Vite | Fast development & build |
-| Styling | Tailwind CSS | Utility-first cyber theme |
-| Animations | Framer Motion | Smooth micro-interactions |
-| Charts | Recharts | Interactive data visualization |
-| Icons | Lucide React | Consistent icon system |
-| Backend | Node.js + Express | REST API server |
-| Real-time | WebSocket (ws) | Live log streaming |
-| Database | SQLite (better-sqlite3) | Zero-config portable DB |
-| Security | Helmet + Rate Limiter | API hardening |
+### Prerequisites
+- **Node.js** (v20.x or higher)
+- **npm** (v10.x or higher)
 
-------------------------------------------------------------------------
+### Setup Instructions
 
-# 🔐 Security & Performance
+1. **Clone the Repository** and navigate to the project directory:
+   ```bash
+   cd AI-CyberLog-Analyzer-Live-Monitering--
+   ```
 
--   Secure file validation
--   Async log parsing (high performance)
--   Large log file support
--   Modular scalable architecture
--   Robust error handling
+2. **Install Dependencies**:
+   Installs root dependencies and triggers nested package setups for client & server folders:
+   ```bash
+   npm install
+   ```
+   *(Note: SQLite and native extensions will automatically compile and build for your active Node version).*
 
-------------------------------------------------------------------------
+3. **Configure Environment Variables**:
+   Create a `.env` file in the root directory (you can copy `.env.example`):
+   ```bash
+   cp .env.example .env
+   ```
 
-# 🌟 Future Enhancements
+4. **Run the Project**:
+   Launches both the backend server and frontend development client concurrently:
+   ```bash
+   npm run dev
+   ```
 
--   Real-time WebSocket Log Streaming
--   AI Threat Explanation (LLM Integration)
--   PDF Threat Report Export
--   Geo-IP Visualization Map
--   Machine Learning Anomaly Detection
--   Alert Notification System
-# AI-CyberLog-Analyzer-Live-Monitering--
+   - **Frontend UI**: `http://localhost:5173/`
+   - **Backend Server**: `http://localhost:5000/`
+
+---
+
+## 🔬 Testing the Live SOC Monitoring Demo
+
+1. **Open the Dashboard Live Stream Page** in your browser:
+   `http://localhost:5173/stream`
+2. **Launch the Attack Simulator** in a separate terminal:
+   ```bash
+   npm run attack:demo
+   ```
+3. **Choose an Attack Type** or run a continuous simulation from the interactive CLI:
+   - `1` — Brute Force Attack
+   - `2` — SQL Injection (Exploit)
+   - `3` — Port Scanning (Reconnaissance)
+   - `4` — DDoS Pattern
+   - `5` — Mixed Attack Simulation
+4. **Watch the live terminal feed** at `/stream` and the **Live Detections** panel capture, classify, and map the threats to MITRE ATT&CK techniques in real time!

@@ -1,21 +1,21 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
-    Radio, Play, Square, Trash2, Pause, ChevronDown,
-    Wifi, WifiOff, AlertTriangle, Shield, ExternalLink, Server,
+    Radio, Play, Square, Trash2, Pause,
+    Wifi, WifiOff, AlertTriangle, Shield, ExternalLink, Server, Terminal, Filter
 } from 'lucide-react';
 import useWebSocket from '../hooks/useWebSocket';
 import api from '../utils/api';
 
 const SEVERITY_STYLES = {
-    critical: 'text-red-400',
-    error: 'text-red-400',
-    warning: 'text-yellow-400',
-    info: 'text-gray-500',
+    critical: 'text-neon-red font-semibold',
+    error: 'text-neon-red',
+    warning: 'text-neon-yellow',
+    info: 'text-neon-sky',
 };
 
 export default function LogStream() {
-    const { messages, isConnected, sendMessage, clearMessages } = useWebSocket();
+    const { messages, isConnected, clearMessages } = useWebSocket();
     const [isSimulating, setIsSimulating] = useState(false);
     const [monitoring, setMonitoring] = useState(false);
     const [monitorPath, setMonitorPath] = useState('');
@@ -101,62 +101,63 @@ export default function LogStream() {
     }
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-5">
             {/* Header */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
-                    <h1 className="text-2xl lg:text-3xl font-cyber font-bold gradient-text flex items-center gap-3">
+                    <h1 className="text-2xl lg:text-3xl font-cyber font-extrabold gradient-text flex items-center gap-3">
                         <Radio size={28} className={monitoring ? 'text-neon-cyan animate-pulse' : 'text-gray-500'} />
-                        Live Monitoring / Live Detection
+                        LIVE MONITORING & SIEM STREAM
                     </h1>
-                    <p className="text-gray-500 text-sm mt-1">Real-time file watching with automatic detection on newly appended log entries</p>
+                    <p className="text-gray-400 text-xs lg:text-sm mt-1 font-mono">Real-time log tailing, automated parsing & WebSocket threat detection</p>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2.5">
                     <a
                         href="http://localhost:5000/demo"
                         target="_blank"
                         rel="noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all bg-white/5 text-gray-300 border border-cyber-border hover:text-neon-cyan hover:border-neon-cyan/20"
+                        className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all bg-white/[0.03] text-gray-300 border border-white/10 hover:text-neon-cyan hover:border-neon-cyan/40"
                     >
                         <ExternalLink size={14} />
-                        Open Demo Website
+                        Demo Web
                     </a>
                     <button
                         onClick={toggleMonitoring}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${monitoring
-                            ? 'bg-neon-cyan/10 text-neon-cyan border border-neon-cyan/20 hover:bg-neon-cyan/20'
-                            : 'bg-white/5 text-gray-300 border border-cyber-border hover:text-neon-cyan hover:border-neon-cyan/20'
-                            }`}
+                        className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
+                            monitoring
+                                ? 'bg-neon-cyan/20 text-neon-cyan border border-neon-cyan/40 shadow-[0_0_15px_rgba(0,240,255,0.2)]'
+                                : 'bg-white/[0.03] text-gray-300 border border-white/10 hover:text-neon-cyan hover:border-neon-cyan/40'
+                        }`}
                     >
                         <Server size={14} />
-                        {monitoring ? 'Stop Monitoring' : 'Start Monitoring'}
+                        {monitoring ? 'Stop Monitor' : 'Start Monitor'}
                     </button>
                     <button
                         onClick={toggleSimulation}
-                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${isSimulating
-                            ? 'bg-neon-red/10 text-neon-red border border-neon-red/20 hover:bg-neon-red/20'
-                            : 'bg-neon-green/10 text-neon-green border border-neon-green/20 hover:bg-neon-green/20'
-                            }`}
+                        className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all ${
+                            isSimulating
+                                ? 'bg-neon-red/20 text-neon-red border border-neon-red/40 shadow-[0_0_15px_rgba(255,46,147,0.2)]'
+                                : 'bg-neon-green/20 text-neon-green border border-neon-green/40 shadow-[0_0_15px_rgba(16,185,129,0.2)]'
+                        }`}
                     >
                         {isSimulating ? <Square size={14} /> : <Play size={14} />}
-                        {isSimulating ? 'Stop Stream' : 'Start Stream'}
+                        {isSimulating ? 'Stop Traffic' : 'Start Sim Traffic'}
                     </button>
                     <button
                         onClick={() => {
                             if (!isPaused) {
-                                // Freeze: snapshot current messages
                                 setPausedMessages([...messages]);
                             } else {
-                                // Unfreeze: discard snapshot
                                 setPausedMessages(null);
                             }
                             setIsPaused(!isPaused);
                         }}
-                        className={`p-2 rounded-lg border transition-all ${isPaused
-                            ? 'bg-neon-yellow/10 text-neon-yellow border-neon-yellow/20'
-                            : 'bg-white/5 text-gray-400 border-cyber-border hover:text-gray-200'
-                            }`}
+                        className={`p-2 rounded-xl border transition-all ${
+                            isPaused
+                                ? 'bg-neon-yellow/20 text-neon-yellow border-neon-yellow/40'
+                                : 'bg-white/[0.03] text-gray-400 border-white/10 hover:text-gray-200'
+                        }`}
                         title={isPaused ? 'Resume' : 'Pause'}
                     >
                         {isPaused ? <Play size={16} /> : <Pause size={16} />}
@@ -168,8 +169,8 @@ export default function LogStream() {
                             setPausedMessages(null);
                             setIsPaused(false);
                         }}
-                        className="p-2 rounded-lg bg-white/5 text-gray-400 border border-cyber-border hover:text-neon-red transition-all"
-                        title="Clear"
+                        className="p-2 rounded-xl bg-white/[0.03] text-gray-400 border border-white/10 hover:text-neon-red hover:border-neon-red/40 transition-all"
+                        title="Clear console"
                     >
                         <Trash2 size={16} />
                     </button>
@@ -177,159 +178,165 @@ export default function LogStream() {
             </div>
 
             {/* Status Bar */}
-            <div className="flex items-center gap-4 text-xs font-mono">
-                <div className={`flex items-center gap-1.5 ${isConnected ? 'text-neon-green' : 'text-red-400'}`}>
-                    {isConnected ? <Wifi size={12} /> : <WifiOff size={12} />}
-                    {isConnected ? 'CONNECTED' : 'DISCONNECTED'}
+            <div className="glass-card p-3 flex flex-wrap items-center justify-between gap-4 text-xs font-mono">
+                <div className="flex flex-wrap items-center gap-4">
+                    <div className={`flex items-center gap-1.5 font-bold ${isConnected ? 'text-neon-green' : 'text-red-400'}`}>
+                        {isConnected ? <Wifi size={13} className="animate-pulse" /> : <WifiOff size={13} />}
+                        {isConnected ? 'WEBSOCKET CONNECTED' : 'DISCONNECTED'}
+                    </div>
+                    <div className="text-white/20">|</div>
+                    <div className={`flex items-center gap-1.5 ${monitoring ? 'text-neon-cyan font-bold' : 'text-gray-400'}`}>
+                        <span className={`w-2 h-2 rounded-full ${monitoring ? 'bg-neon-cyan pulse-dot' : 'bg-gray-600'}`} />
+                        {monitoring ? 'TAILING LIVE FILE' : 'MONITORING STANDBY'}
+                    </div>
+                    <div className="text-white/20">|</div>
+                    <div className="text-gray-400">
+                        Total Logs: <span className="text-white font-bold">{logMessages.length}</span>
+                    </div>
+                    <div className="text-white/20">|</div>
+                    <div className="text-gray-400">
+                        Threat Alerts: <span className="text-neon-red font-bold">{threatMessages.length}</span>
+                    </div>
                 </div>
-                <div className="text-gray-600">|</div>
-                <div className={`flex items-center gap-1.5 ${monitoring ? 'text-neon-cyan' : 'text-gray-500'}`}>
-                    <span className={`w-2 h-2 rounded-full ${monitoring ? 'bg-neon-cyan pulse-dot' : 'bg-gray-600'}`} />
-                    {monitoring ? 'LIVE MONITORING ON' : 'LIVE MONITORING OFF'}
+
+                <div className="flex items-center gap-2">
+                    <Filter size={13} className="text-neon-cyan" />
+                    <select
+                        value={filter}
+                        onChange={(e) => setFilter(e.target.value)}
+                        className="bg-cyber-card border border-white/10 rounded-lg px-2.5 py-1 text-xs text-gray-200 focus:border-neon-cyan focus:outline-none font-mono"
+                    >
+                        <option value="all">All Logs ({logMessages.length})</option>
+                        <option value="critical">Critical</option>
+                        <option value="error">Error</option>
+                        <option value="warning">Warning</option>
+                        <option value="info">Info</option>
+                    </select>
                 </div>
-                <div className="text-gray-600">|</div>
-                <div className="text-gray-500">
-                    Events: <span className="text-gray-300">{logMessages.length}</span>
-                </div>
-                <div className="text-gray-600">|</div>
-                <div className="text-gray-500">
-                    Threats: <span className="text-neon-red">{threatMessages.length}</span>
-                </div>
-                <div className="text-gray-600">|</div>
-                <select
-                    value={filter}
-                    onChange={(e) => setFilter(e.target.value)}
-                    className="bg-transparent border border-cyber-border rounded px-2 py-0.5 text-gray-400 focus:outline-none focus:border-neon-cyan/30"
-                >
-                    <option value="all">All Levels</option>
-                    <option value="critical">Critical</option>
-                    <option value="error">Error</option>
-                    <option value="warning">Warning</option>
-                    <option value="info">Info</option>
-                </select>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-                {/* Terminal */}
-                <div className="lg:col-span-3 glass-card overflow-hidden relative">
-                    {/* Terminal header */}
-                    <div className="flex items-center gap-2 px-4 py-2 border-b border-cyber-border bg-black/30">
-                        <div className="flex gap-1.5">
-                            <div className="w-3 h-3 rounded-full bg-red-500/70" />
-                            <div className="w-3 h-3 rounded-full bg-yellow-500/70" />
-                            <div className="w-3 h-3 rounded-full bg-green-500/70" />
-                        </div>
-                        <span className="text-xs text-gray-500 font-mono ml-2">cyberguard@siem — live_feed</span>
-                        {monitoring && (
-                            <div className="ml-auto flex items-center gap-1.5">
-                                <div className="w-2 h-2 rounded-full bg-neon-green pulse-dot" />
-                                <span className="text-xs text-neon-cyan font-mono">WATCHING {monitorPath ? monitorPath.split('\\').pop() : 'live log'}</span>
+            {/* Terminal Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Main Terminal Window */}
+                <div className="lg:col-span-2 glass-card border border-white/10 rounded-2xl overflow-hidden flex flex-col h-[560px] shadow-[0_15px_40px_rgba(0,0,0,0.7)] relative">
+                    {/* Scanline overlay */}
+                    <div className="scan-line pointer-events-none opacity-40 z-20" />
+
+                    {/* Window Header */}
+                    <div className="flex items-center justify-between px-4 py-3 bg-[#0a0f1d] border-b border-white/10 font-mono text-xs z-10">
+                        <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                                <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+                                <div className="w-3 h-3 rounded-full bg-green-500/80" />
                             </div>
-                        )}
+                            <Terminal size={14} className="ml-2 text-neon-cyan" />
+                            <span className="text-gray-300 font-semibold tracking-wide">SOC-LIVE-LOGS.STREAM</span>
+                        </div>
+                        <div className="flex items-center gap-3 text-gray-400">
+                            {isPaused && (
+                                <span className="px-2 py-0.5 rounded bg-neon-yellow/20 text-neon-yellow font-bold text-[10px] animate-pulse">
+                                    PAUSED
+                                </span>
+                            )}
+                            <span className="text-[11px] text-gray-500">{filteredLogs.length} events</span>
+                        </div>
                     </div>
 
-                    {/* Terminal body */}
+                    {/* Terminal Body */}
                     <div
                         ref={terminalRef}
                         onScroll={handleScroll}
-                        className="h-[500px] lg:h-[600px] overflow-y-auto p-4 font-mono text-xs leading-relaxed bg-[#080c18]"
+                        className="flex-1 p-4 overflow-y-auto font-mono text-xs leading-relaxed bg-[#040711]/90 space-y-1.5"
                     >
-                        {filteredLogs.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center h-full text-gray-600">
-                                <Radio size={48} className="mb-4 opacity-20" />
-                                <p className="text-sm">No log events yet</p>
-                                <p className="text-xs mt-1">Use the demo website or attack simulator to append logs, then start live monitoring</p>
-                            </div>
-                        ) : (
-                            filteredLogs.map((msg, i) => {
-
-                                const entry = msg.data;
-                                const time = new Date(entry.timestamp).toLocaleTimeString();
-                                const sevStyle = SEVERITY_STYLES[entry.severity] || 'text-gray-500';
+                        {filteredLogs.length > 0 ? (
+                            filteredLogs.map((msg, index) => {
+                                const data = msg.data || {};
+                                const raw = data.rawLog || data.message || JSON.stringify(data);
+                                const timestamp = data.timestamp || new Date(msg.timestamp || Date.now()).toLocaleTimeString();
+                                const severity = data.severity || 'info';
 
                                 return (
-                                    <motion.div
-                                        key={i}
-                                        initial={{ opacity: 0, x: -10 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        className="hover:bg-white/[0.02] px-1 py-0.5 rounded"
+                                    <div
+                                        key={index}
+                                        className="flex items-start gap-2.5 hover:bg-white/[0.03] py-0.5 px-1 rounded transition-colors group"
                                     >
-                                        <span className="text-gray-600">[{time}]</span>{' '}
-                                        <span className={`uppercase font-bold ${sevStyle}`}>
-                                            [{entry.severity?.padEnd(8) || 'info    '}]
-                                        </span>{' '}
-                                        {entry.sourceIP && (
-                                            <span className="text-neon-purple">{entry.sourceIP}</span>
-                                        )}{' '}
-                                        {entry.method && (
-                                            <span className="text-neon-cyan">{entry.method}</span>
-                                        )}{' '}
-                                        {entry.path && (
-                                            <span className="text-gray-400">{entry.path}</span>
-                                        )}{' '}
-                                        {entry.statusCode && (
-                                            <span className={entry.statusCode >= 400 ? 'text-red-400' : 'text-neon-green'}>
-                                                {entry.statusCode}
-                                            </span>
-                                        )}{' '}
-                                        <span className="text-gray-600">{entry.message}</span>
-                                    </motion.div>
+                                        <span className="text-gray-500 select-none flex-shrink-0 text-[10px] pt-0.5 font-semibold">
+                                            [{timestamp}]
+                                        </span>
+                                        <span className={`select-none uppercase font-bold text-[10px] px-1.5 py-0.2 rounded bg-white/[0.03] ${SEVERITY_STYLES[severity] || 'text-gray-400'}`}>
+                                            {severity}
+                                        </span>
+                                        <span className="text-gray-300 break-all text-xs">
+                                            {raw}
+                                        </span>
+                                    </div>
                                 );
                             })
-                        )}
-
-                        {!autoScroll && filteredLogs.length > 0 && (
-                            <button
-                                onClick={() => {
-                                    setAutoScroll(true);
-                                    terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
-                                }}
-                                className="sticky bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1 px-3 py-1 rounded-full bg-neon-cyan/20 text-neon-cyan text-xs border border-neon-cyan/30"
-                            >
-                                <ChevronDown size={12} />
-                                Scroll to bottom
-                            </button>
+                        ) : (
+                            <div className="h-full flex flex-col items-center justify-center text-gray-600 space-y-2">
+                                <Radio size={32} className="opacity-20 animate-pulse text-neon-cyan" />
+                                <p className="text-xs">Awaiting log events... Start Traffic Simulation or Live Monitor</p>
+                            </div>
                         )}
                     </div>
                 </div>
 
-                {/* Live Threats Panel */}
-                <div className="glass-card p-4">
-                    <h3 className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
-                        <Shield size={14} className="text-neon-red" />
-                        Live Detections
+                {/* Live Threat Detection Feed */}
+                <div className="glass-card p-5 border border-white/10 rounded-2xl flex flex-col h-[560px] overflow-hidden">
+                    <h3 className="text-sm font-bold text-gray-200 tracking-wide mb-4 flex items-center justify-between">
+                        <span className="flex items-center gap-2">
+                            <AlertTriangle size={16} className="text-neon-red" />
+                            Live Threat Feed
+                        </span>
+                        <span className="px-2 py-0.5 rounded-full bg-neon-red/15 text-neon-red text-[10px] font-mono font-bold border border-neon-red/30">
+                            REALTIME
+                        </span>
                     </h3>
 
-                    <div className="space-y-3">
-                        {liveThreats.length > 0 ? (
-                            liveThreats.map((threat, i) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ opacity: 0, x: 20 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    className="p-3 rounded-lg bg-neon-red/5 border border-neon-red/10"
-                                >
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <AlertTriangle size={12} className="text-neon-red" />
-                                        <span className={`text-xs font-bold severity-${threat.severity}`}>
-                                            {threat.severity?.toUpperCase()}
-                                        </span>
-                                    </div>
-                                    <p className="text-xs text-gray-400 font-medium">{threat.type}</p>
-                                    <p className="text-[10px] text-gray-600 mt-1 font-mono">{threat.sourceIP}</p>
-                                    {threat.mitreId && (
-                                        <span className={`mitre-badge mitre-${threat.severity} mt-2 text-[10px]`}>
-                                            {threat.mitreId}
-                                        </span>
-                                    )}
-                                </motion.div>
-                            ))
-                        ) : (
-                            <div className="text-center py-8 text-gray-600">
-                                <Shield size={24} className="mx-auto mb-2 opacity-30" />
-                                <p className="text-xs">No live threats</p>
-                            </div>
-                        )}
+                    <div className="flex-1 overflow-y-auto space-y-3 pr-1">
+                        <AnimatePresence>
+                            {liveThreats.length > 0 ? (
+                                liveThreats.map((threat, idx) => (
+                                    <motion.div
+                                        key={threat.id || idx}
+                                        initial={{ opacity: 0, x: 20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: -20 }}
+                                        className="p-3.5 rounded-xl bg-neon-red/10 border border-neon-red/30 shadow-[0_0_15px_rgba(255,46,147,0.15)] space-y-2"
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <span className="font-bold text-xs text-neon-red tracking-wide uppercase">
+                                                🚨 {threat.type}
+                                            </span>
+                                            {threat.mitre_id && (
+                                                <span className="mitre-badge mitre-critical">
+                                                    {threat.mitre_id}
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        <p className="text-xs text-gray-300 font-mono">
+                                            IP: <span className="text-neon-cyan font-bold">{threat.sourceIP || threat.source_ip || 'N/A'}</span>
+                                        </p>
+
+                                        <p className="text-[11px] text-gray-400 leading-snug">
+                                            {threat.description}
+                                        </p>
+
+                                        <div className="text-[10px] font-mono text-gray-500 pt-1 border-t border-white/5 flex justify-between">
+                                            <span>SEVERITY: {threat.severity?.toUpperCase()}</span>
+                                            <span>JUST NOW</span>
+                                        </div>
+                                    </motion.div>
+                                ))
+                            ) : (
+                                <div className="h-full flex flex-col items-center justify-center text-gray-600 text-center space-y-2">
+                                    <Shield size={36} className="opacity-20 text-neon-cyan" />
+                                    <p className="text-xs font-mono">No active threats detected in current stream batch</p>
+                                </div>
+                            )}
+                        </AnimatePresence>
                     </div>
                 </div>
             </div>

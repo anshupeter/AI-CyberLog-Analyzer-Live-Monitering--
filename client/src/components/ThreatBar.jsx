@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertTriangle, Shield, Activity, Wifi, WifiOff } from 'lucide-react';
+import { AlertTriangle, Shield, Activity, Wifi, WifiOff, Zap, Bell } from 'lucide-react';
 import api from '../utils/api';
 import useWebSocket from '../hooks/useWebSocket';
 
@@ -11,7 +11,7 @@ export default function ThreatBar() {
 
     useEffect(() => {
         fetchStats();
-        const interval = setInterval(fetchStats, 15000);
+        const interval = setInterval(fetchStats, 12000);
         return () => clearInterval(interval);
     }, []);
 
@@ -30,83 +30,90 @@ export default function ThreatBar() {
             const res = await api.get('/logs/stats');
             setStats(res.data);
         } catch (e) {
-            // Backend might not be ready yet
+            // Server might still be booting up
         }
     }
 
     return (
-        <div className="h-14 flex items-center gap-4 px-4 lg:px-6 border-b border-cyber-border bg-cyber-bg/80 backdrop-blur-lg sticky top-0 z-30">
-            {/* Left: Stats */}
-            <div className="flex items-center gap-4 lg:gap-6 flex-1">
+        <div className="h-16 flex items-center justify-between gap-4 px-4 lg:px-8 border-b border-cyber-border bg-[#060913]/85 backdrop-blur-xl sticky top-0 z-30 shadow-[0_4px_20px_rgba(0,0,0,0.4)]">
+            {/* Left: Quick Metrics Pills */}
+            <div className="flex items-center gap-3 lg:gap-6">
                 <StatPill
-                    icon={<Shield size={14} />}
+                    icon={<Shield size={15} />}
                     label="Threats"
                     value={stats?.totalThreats || 0}
                     color="text-neon-red"
+                    borderColor="border-neon-red/30"
                     bgColor="bg-neon-red/10"
+                    glow="shadow-[0_0_12px_rgba(255,46,147,0.2)]"
                 />
                 <StatPill
-                    icon={<AlertTriangle size={14} />}
+                    icon={<AlertTriangle size={15} />}
                     label="Critical"
                     value={stats?.criticalThreats || 0}
                     color="text-neon-orange"
+                    borderColor="border-neon-orange/30"
                     bgColor="bg-neon-orange/10"
                     className="hidden sm:flex"
+                    glow="shadow-[0_0_12px_rgba(249,115,22,0.2)]"
                 />
                 <StatPill
-                    icon={<Activity size={14} />}
-                    label="Logs"
+                    icon={<Activity size={15} />}
+                    label="Processed"
                     value={stats?.totalLogs ? formatNum(stats.totalLogs) : '0'}
                     color="text-neon-cyan"
+                    borderColor="border-neon-cyan/30"
                     bgColor="bg-neon-cyan/10"
                     className="hidden md:flex"
+                    glow="shadow-[0_0_12px_rgba(0,240,255,0.2)]"
                 />
             </div>
 
-            {/* Center: Live threat alert */}
+            {/* Center: Live Threat Alert Banner */}
             <AnimatePresence>
                 {latestThreat && (
                     <motion.div
-                        initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                        initial={{ opacity: 0, y: -12, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                        className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-neon-red/10 border border-neon-red/30 max-w-md"
+                        exit={{ opacity: 0, y: -12, scale: 0.95 }}
+                        className="hidden lg:flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-neon-red/15 border border-neon-red/40 shadow-[0_0_20px_rgba(255,46,147,0.3)] max-w-lg"
                     >
-                        <div className="w-2 h-2 rounded-full bg-neon-red pulse-dot" />
-                        <span className="text-xs text-neon-red font-mono truncate">
-                            🚨 {latestThreat.type}: {latestThreat.sourceIP}
+                        <Bell className="w-4 h-4 text-neon-red animate-bounce" />
+                        <span className="text-xs text-neon-red font-mono font-semibold truncate tracking-wide">
+                            CRITICAL DETECTED: {latestThreat.type} ({latestThreat.sourceIP})
                         </span>
                     </motion.div>
                 )}
             </AnimatePresence>
 
-            {/* Right: Connection status */}
-            <div className="flex items-center gap-2">
+            {/* Right: Live Connection Pill */}
+            <div className="flex items-center gap-3">
                 <motion.div
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${isConnected
-                            ? 'bg-neon-green/10 text-neon-green border border-neon-green/20'
-                            : 'bg-red-500/10 text-red-400 border border-red-500/20'
-                        }`}
-                    animate={isConnected ? { opacity: [1, 0.7, 1] } : {}}
-                    transition={{ duration: 2, repeat: Infinity }}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold tracking-wider font-mono ${
+                        isConnected
+                            ? 'bg-neon-green/15 text-neon-green border border-neon-green/40 shadow-[0_0_12px_rgba(16,185,129,0.3)]'
+                            : 'bg-red-500/15 text-red-400 border border-red-500/30'
+                    }`}
+                    animate={isConnected ? { boxShadow: ['0 0 8px rgba(16,185,129,0.2)', '0 0 16px rgba(16,185,129,0.5)', '0 0 8px rgba(16,185,129,0.2)'] } : {}}
+                    transition={{ duration: 2.5, repeat: Infinity }}
                 >
-                    {isConnected ? <Wifi size={12} /> : <WifiOff size={12} />}
-                    <span className="hidden sm:inline">{isConnected ? 'LIVE' : 'OFFLINE'}</span>
+                    {isConnected ? <Wifi size={13} className="animate-pulse" /> : <WifiOff size={13} />}
+                    <span>{isConnected ? 'LIVE ENGINE' : 'DISCONNECTED'}</span>
                 </motion.div>
             </div>
         </div>
     );
 }
 
-function StatPill({ icon, label, value, color, bgColor, className = '' }) {
+function StatPill({ icon, label, value, color, borderColor, bgColor, glow, className = '' }) {
     return (
-        <div className={`flex items-center gap-2 ${className}`}>
-            <div className={`flex items-center justify-center w-7 h-7 rounded-lg ${bgColor} ${color}`}>
+        <div className={`flex items-center gap-2.5 px-3 py-1.5 rounded-xl border ${borderColor} ${bgColor} ${glow} transition-all hover:scale-105 ${className}`}>
+            <div className={`${color}`}>
                 {icon}
             </div>
-            <div>
-                <p className="text-[10px] text-gray-500 uppercase tracking-wider leading-none">{label}</p>
-                <p className={`text-sm font-bold ${color} font-mono leading-tight`}>{value}</p>
+            <div className="flex flex-col">
+                <span className="text-[9px] text-gray-400 font-mono tracking-widest uppercase leading-none">{label}</span>
+                <span className={`text-xs font-bold ${color} font-mono leading-tight mt-0.5`}>{value}</span>
             </div>
         </div>
     );
